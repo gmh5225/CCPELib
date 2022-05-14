@@ -27,36 +27,36 @@ if(CMKR_ROOT_PROJECT)
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
-project(cmkr_for_beginners
+project(CCPELib
 	DESCRIPTION
-		"A minimal cmkr project."
+		CCPELib
 )
 
-# Target hello_world
-set(CMKR_TARGET hello_world)
-set(hello_world_SOURCES "")
+# Target CCPELib
+set(CMKR_TARGET CCPELib)
+set(CCPELib_SOURCES "")
 
-list(APPEND hello_world_SOURCES
-	"src/main.cpp"
+list(APPEND CCPELib_SOURCES
+	"src/CCPELib.cpp"
+	"include/CCPELib.h"
 )
 
-list(APPEND hello_world_SOURCES
+list(APPEND CCPELib_SOURCES
 	cmake.toml
 )
 
-set(CMKR_SOURCES ${hello_world_SOURCES})
-add_executable(hello_world)
+set(CMKR_SOURCES ${CCPELib_SOURCES})
+add_library(CCPELib)
 
-if(hello_world_SOURCES)
-	target_sources(hello_world PRIVATE ${hello_world_SOURCES})
+if(CCPELib_SOURCES)
+	target_sources(CCPELib PRIVATE ${CCPELib_SOURCES})
 endif()
 
-get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)
-if(NOT CMKR_VS_STARTUP_PROJECT)
-	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT hello_world)
-endif()
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${CCPELib_SOURCES})
 
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${hello_world_SOURCES})
+target_include_directories(CCPELib PUBLIC
+	include
+)
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
