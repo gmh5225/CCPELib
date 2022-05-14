@@ -7,3 +7,4 @@ description = "CCPELib"
 type = "library"
 headers = ["include/**.h"]
 sources = ["src/**.cpp", "src/**.h"]
+include-directories = ["include"]
