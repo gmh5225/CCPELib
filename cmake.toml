@@ -1,8 +1,9 @@
 # Reference: https://build-cpp.github.io/cmkr/cmake-toml
 [project]
-name = "cmkr_for_beginners"
-description = "A minimal cmkr project."
+name = "CCPELib"
+description = "CCPELib"
 
-[target.hello_world]
-type = "executable"
-sources = ["src/main.cpp"]
+[target.CCPELib]
+type = "library"
+headers = ["include/**.h"]
+sources = ["src/**.cpp", "src/**.h"]
