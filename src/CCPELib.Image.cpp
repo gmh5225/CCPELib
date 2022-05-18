@@ -42,7 +42,7 @@ PELib::GetImageSize()
 }
 
 bool
-PELib::SetImageBase(size_t dwImageBase)
+PELib::SetImageBase(size_t ImageBase)
 {
     if (mNtHeaderPtr32 == nullptr)
     {
@@ -50,16 +50,16 @@ PELib::SetImageBase(size_t dwImageBase)
     }
 
 #ifdef CCPELibIS32BIT
-    mNtHeaderPtr32->optional_header.image_base = dwImageBase;
+    mNtHeaderPtr32->optional_header.image_base = ImageBase;
 #else
-    mNtHeaderPtr64->optional_header.image_base = dwImageBase;
+    mNtHeaderPtr64->optional_header.image_base = ImageBase;
 #endif
 
     return true;
 }
 
 bool
-PELib::SetImageSize(size_t dwImageSize)
+PELib::SetImageSize(size_t ImageSize)
 {
     if (mNtHeaderPtr32 == nullptr)
     {
@@ -67,9 +67,9 @@ PELib::SetImageSize(size_t dwImageSize)
     }
 
 #ifdef CCPELibIS32BIT
-    mNtHeaderPtr32->optional_header.size_image = dwImageSize;
+    mNtHeaderPtr32->optional_header.size_image = ImageSize;
 #else
-    mNtHeaderPtr64->optional_header.size_image = dwImageSize;
+    mNtHeaderPtr64->optional_header.size_image = ImageSize;
 #endif
 
     return true;

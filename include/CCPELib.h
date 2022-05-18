@@ -58,8 +58,8 @@ public:
     // image
     size_t GetImageBase();
     size_t GetImageSize();
-    bool SetImageBase(size_t dwImageBase);
-    bool SetImageSize(size_t dwImageSize);
+    bool SetImageBase(size_t ImageBase);
+    bool SetImageSize(size_t ImageSize);
 
 private:
     // pe stub
