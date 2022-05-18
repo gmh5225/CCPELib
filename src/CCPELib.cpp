@@ -15,6 +15,8 @@ PELib::PELib() {}
 
 PELib::~PELib() {}
 
+/////////////////////////////////////////////////////////////////////////////////
+//// public function
 bool
 PELib::Load(const char *FileName, bool IsClearDebugData /*= true*/)
 {
