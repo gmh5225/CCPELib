@@ -201,6 +201,7 @@ PELib::AppendSection(const char *NewSectionName, size_t RawSize, size_t VirtualS
     // new characteristics
     if (Characteristics == 0)
     {
+        NewSectionHeaderPtr->characteristics.cnt_code = 1;
         NewSectionHeaderPtr->characteristics.mem_execute = 1;
         NewSectionHeaderPtr->characteristics.mem_read = 1;
         NewSectionHeaderPtr->characteristics.mem_write = 1;
