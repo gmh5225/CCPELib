@@ -25,7 +25,65 @@ PELib::Load(const char *FileName, bool IsClearDebugData /*= true*/)
         return false;
     }
 
+    // mark ClearDebugData
     mIsClearDebugData = IsClearDebugData;
+
+    if (!IsPEFile32(FileName) || !IsPEFile64(FileName))
+    {
+        return false;
+    }
+
+    // get file size
+    auto FileSize = GetFileSizeByName(FileName);
+    if (FileSize == 0)
+    {
+        return false;
+    }
+
+    // read file content to our buffer
+    auto FileBufferMemory = new unsigned char[FileSize];
+    if (FileBufferMemory == NULL)
+    {
+        return false;
+    }
+
+    if (!ReadFileToMemory(FileName, FileBufferMemory, FileSize))
+    {
+        delete[] FileBufferMemory;
+        return false;
+    }
+
+    // save FileBufferMemory & FileSize
+    mFileBufferMemory = FileBufferMemory;
+    mOldFileSize = FileSize;
+    mNewFileSize = FileSize;
+
+    // save dos_header_t
+    mDosHeaderPtr = (win::dos_header_t *)mFileBufferMemory;
+    // save nt_headers
+    mNtHeaderPtr32 = (win::nt_headers_x86_t *)(mFileBufferMemory + mDosHeaderPtr->e_lfanew);
+    mNtHeaderPtr64 = (win::nt_headers_x64_t *)(mFileBufferMemory + mDosHeaderPtr->e_lfanew);
+#ifdef CCPELibIS32BIT
+    mSectionHeaderPtr =
+        (win::section_header_t
+             *)((unsigned char *)&mNtHeaderPtr32->optional_header + mNtHeaderPtr32->file_header.size_optional_header);
+#else
+    mSectionHeaderPtr =
+        (win::section_header_t
+             *)((unsigned char *)&mNtHeaderPtr64->optional_header + mNtHeaderPtr64->file_header.size_optional_header);
+#endif
+
+    // load pe struct
+    if (!LoadPEStruct())
+    {
+        // remember to unlaod if failed
+        UnLoadPEStruct();
+        return false;
+    }
+
+    // save FileName
+    mPEFileName = FileName;
+
     return true;
 }
 
@@ -99,6 +157,14 @@ PELib::IsPEFile64(const char *FileName)
 
 /////////////////////////////////////////////////////////////////////////////////
 //// private function
+
+//  file buffer
+unsigned char *
+PELib::GetFileBufferMemoryPtr()
+{
+    return mFileBufferMemory;
+}
+
 size_t
 PELib::GetFileSizeByName(const char *FileName)
 {
@@ -194,6 +260,19 @@ PELib::WriteMemoryToFile(const char *FileName, unsigned char *Buffer, size_t Siz
     }
 
     return Success;
+}
+
+// pe stub
+bool
+PELib::LoadPEStruct()
+{
+    // TODO
+    return true;
+}
+
+void
+PELib::UnLoadPEStruct()
+{
 }
 
 } // namespace CCPELib
