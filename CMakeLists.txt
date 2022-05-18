@@ -29,8 +29,30 @@ endif()
 
 project(CCPELib
 	DESCRIPTION
-		CCPELib
+		"Yet another PE file manipulation library."
 )
+
+# Target linux-pe
+set(CMKR_TARGET linux-pe)
+set(linux-pe_SOURCES "")
+
+set(CMKR_SOURCES ${linux-pe_SOURCES})
+add_library(linux-pe INTERFACE)
+
+if(linux-pe_SOURCES)
+	target_sources(linux-pe INTERFACE ${linux-pe_SOURCES})
+endif()
+
+target_compile_features(linux-pe INTERFACE
+	cxx_std_20
+)
+
+target_include_directories(linux-pe INTERFACE
+	"linux-pe/includes"
+)
+
+unset(CMKR_TARGET)
+unset(CMKR_SOURCES)
 
 # Target CCPELib
 set(CMKR_TARGET CCPELib)
@@ -54,8 +76,16 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${CCPELib_SOURCES})
 
+target_compile_features(CCPELib PUBLIC
+	cxx_std_20
+)
+
 target_include_directories(CCPELib PUBLIC
 	include
+)
+
+target_link_libraries(CCPELib PUBLIC
+	linux-pe
 )
 
 unset(CMKR_TARGET)

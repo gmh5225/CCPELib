@@ -3,8 +3,15 @@
 name = "CCPELib"
 description = "Yet another PE file manipulation library."
 
+[target.linux-pe]
+type = "interface"
+include-directories = ["linux-pe/includes"]
+compile-features = ["cxx_std_20"]
+
 [target.CCPELib]
 type = "library"
 headers = ["include/**.h"]
 sources = ["src/**.cpp", "src/**.h"]
 include-directories = ["include"]
+link-libraries = ["linux-pe"]
+compile-features = ["cxx_std_20"]
