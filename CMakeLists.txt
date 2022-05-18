@@ -27,10 +27,24 @@ if(CMKR_ROOT_PROJECT)
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
+include(configurations.cmake)
+
 project(CCPELib
+	LANGUAGES
+		CXX
 	DESCRIPTION
 		"Yet another PE file manipulation library."
 )
+
+# test
+set(CMKR_CMAKE_FOLDER ${CMAKE_FOLDER})
+if(CMAKE_FOLDER)
+	set(CMAKE_FOLDER "${CMAKE_FOLDER}/test")
+else()
+	set(CMAKE_FOLDER test)
+endif()
+add_subdirectory(test)
+set(CMAKE_FOLDER ${CMKR_CMAKE_FOLDER})
 
 # Target linux-pe
 set(CMKR_TARGET linux-pe)

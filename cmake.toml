@@ -2,6 +2,12 @@
 [project]
 name = "CCPELib"
 description = "Yet another PE file manipulation library."
+languages = ["CXX"]
+include-before = [
+	"configurations.cmake"
+]
+
+[subdir.test]
 
 [target.linux-pe]
 type = "interface"

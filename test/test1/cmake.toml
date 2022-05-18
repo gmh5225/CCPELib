@@ -1,0 +1,9 @@
+# Reference: https://build-cpp.github.io/cmkr/cmake-toml
+
+[target.test1]
+type = "executable"
+headers = ["**.h"]
+sources = ["**.cpp", "**.h"]
+include-directories = ["../../include"]
+link-libraries = ["CCPELib"]
+compile-features = ["cxx_std_20"]
