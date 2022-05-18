@@ -88,6 +88,47 @@ PELib::Load(const char *FileName, bool IsClearDebugData /*= true*/)
 }
 
 bool
+PELib::Save(const char *FileName)
+{
+    if (mFileBufferMemory == nullptr || FileName == nullptr)
+    {
+        return false;
+    }
+
+    bool Success = false;
+
+    do
+    {
+        // TODO save pe stub
+
+        Success = true;
+    } while (0);
+
+    if (Success)
+    {
+        Success = WriteMemoryToFile(FileName, mFileBufferMemory, GetOutputFileSize());
+    }
+
+    return Success;
+}
+
+size_t
+PELib::GetOutputFileSize()
+{
+    size_t OutputFileSize = mNewFileSize;
+
+    // TODO pe stub size
+
+    return OutputFileSize;
+}
+
+unsigned char *
+PELib::GetFileBufferMemoryPtr()
+{
+    return mFileBufferMemory;
+}
+
+bool
 PELib::IsPEFile32(const char *FileName)
 {
     unsigned char PEHeaderBuffer[PE_HEADER_SIZE] = {0};
@@ -159,12 +200,6 @@ PELib::IsPEFile64(const char *FileName)
 //// private function
 
 //  file buffer
-unsigned char *
-PELib::GetFileBufferMemoryPtr()
-{
-    return mFileBufferMemory;
-}
-
 size_t
 PELib::GetFileSizeByName(const char *FileName)
 {

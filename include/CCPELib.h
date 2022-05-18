@@ -24,15 +24,18 @@ public:
 
 public:
     bool Load(const char *FileName, bool IsClearDebugData = true);
+    bool Save(const char *FileName);
+    size_t GetOutputFileSize();
+    unsigned char *GetFileBufferMemoryPtr();
     bool IsPEFile32(const char *FileName);
     bool IsPEFile64(const char *FileName);
 
 private:
     //  file buffer
-    unsigned char *GetFileBufferMemoryPtr();
     size_t GetFileSizeByName(const char *FileName);
     bool ReadFileToMemory(const char *FileName, unsigned char *Buffer, size_t Size);
     bool WriteMemoryToFile(const char *FileName, unsigned char *Buffer, size_t Size);
+
     // pe stub
     bool LoadPEStruct();
     void UnLoadPEStruct();
