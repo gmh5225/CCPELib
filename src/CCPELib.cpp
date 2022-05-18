@@ -28,7 +28,7 @@ PELib::Load(const char *FileName, bool IsClearDebugData /*= true*/)
     // mark ClearDebugData
     mIsClearDebugData = IsClearDebugData;
 
-    if (!IsPEFile32(FileName) || !IsPEFile64(FileName))
+    if (!(IsPEFile32(FileName) || IsPEFile64(FileName)))
     {
         return false;
     }

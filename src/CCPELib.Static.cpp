@@ -122,7 +122,7 @@ PELib::ReadFileToMemory(const char *FileName, unsigned char *Buffer, size_t Size
             break;
         }
 
-        size_t Read = fread(Buffer, Size, 1, PF);
+        size_t Read = fread(Buffer, 1, Size, PF);
         if (Read != Size)
         {
             break;
@@ -161,7 +161,7 @@ PELib::WriteMemoryToFile(const char *FileName, unsigned char *Buffer, size_t Siz
             break;
         }
 
-        size_t Write = fwrite(Buffer, Size, 1, PF);
+        size_t Write = fwrite(Buffer, 1, Size, PF);
         if (Write != Size)
         {
             break;

@@ -199,7 +199,16 @@ PELib::AppendSection(const char *NewSectionName, size_t RawSize, size_t VirtualS
     memcpy(NewSectionHeaderPtr->name.short_name, SectionName, LEN_SHORT_STR);
 
     // new characteristics
-    NewSectionHeaderPtr->characteristics.flags = Characteristics;
+    if (Characteristics == 0)
+    {
+        NewSectionHeaderPtr->characteristics.mem_execute = 1;
+        NewSectionHeaderPtr->characteristics.mem_read = 1;
+        NewSectionHeaderPtr->characteristics.mem_write = 1;
+    }
+    else
+    {
+        NewSectionHeaderPtr->characteristics.flags = Characteristics;
+    }
 
     // new section counts
     SetNumberOfSections(NumberOfSections + 1);
