@@ -73,7 +73,10 @@ set(CMKR_TARGET CCPELib)
 set(CCPELib_SOURCES "")
 
 list(APPEND CCPELib_SOURCES
-	"src/CCPELib.AddNewSection.cpp"
+	"src/CCPELib.Align.cpp"
+	"src/CCPELib.Image.cpp"
+	"src/CCPELib.Section.cpp"
+	"src/CCPELib.Static.cpp"
 	"src/CCPELib.cpp"
 	"include/CCPELib.h"
 )

@@ -23,19 +23,45 @@ public:
     virtual ~PELib();
 
 public:
+    // static method
+
+    // misc
+    static bool IsPEFile32(const char *FileName);
+    static bool IsPEFile64(const char *FileName);
+
+    //  file buffer
+    static size_t GetFileSizeByName(const char *FileName);
+    static bool ReadFileToMemory(const char *FileName, unsigned char *Buffer, size_t Size);
+    static bool WriteMemoryToFile(const char *FileName, unsigned char *Buffer, size_t Size);
+
+public:
+    // file input/output
     bool Load(const char *FileName, bool IsClearDebugData = true);
     bool Save(const char *FileName);
     size_t GetOutputFileSize();
     unsigned char *GetFileBufferMemoryPtr();
-    bool IsPEFile32(const char *FileName);
-    bool IsPEFile64(const char *FileName);
+    bool ReallocFileBufferMemory(unsigned int NewSize, unsigned int OldSize);
+
+    // align
+    unsigned int AlignValue(unsigned int Value, unsigned int AlignNumber);
+    unsigned int FileAlignValue(unsigned int Value);
+    unsigned int SectionAlignValue(unsigned int Value);
+
+    // section
+    int GetNumberOfSections();
+    bool SetNumberOfSections(int SectionCount);
+    unsigned int GetSectionMaxOffset(); // align by file alignment
+    unsigned int GetSectionMaxRVA();    // align by section alignment
+    int AppendSection(const char *NewSectionName, size_t Size, unsigned int Characteristics);
+    int AppendSection(const char *NewSectionName, size_t RawSize, size_t VirtualSize, unsigned int Characteristics);
+
+    // image
+    size_t GetImageBase();
+    size_t GetImageSize();
+    bool SetImageBase(size_t dwImageBase);
+    bool SetImageSize(size_t dwImageSize);
 
 private:
-    //  file buffer
-    size_t GetFileSizeByName(const char *FileName);
-    bool ReadFileToMemory(const char *FileName, unsigned char *Buffer, size_t Size);
-    bool WriteMemoryToFile(const char *FileName, unsigned char *Buffer, size_t Size);
-
     // pe stub
     bool LoadPEStruct();
     void UnLoadPEStruct();
