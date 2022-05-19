@@ -63,6 +63,8 @@ public:
     int GetSectionIndexByVA(size_t VA);
     int GetSectionIndexByName(const char *SectionName);
     int GetSectionIndexByOffset(unsigned int Offset);
+    unsigned int GetLastSectionRVA();
+    size_t GetLastSectionVA();
     int AppendSection(const char *NewSectionName, size_t Size, unsigned int Characteristics);
     int AppendSection(const char *NewSectionName, size_t RawSize, size_t VirtualSize, unsigned int Characteristics);
 

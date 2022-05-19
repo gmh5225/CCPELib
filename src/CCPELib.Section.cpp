@@ -181,6 +181,20 @@ PELib::GetSectionIndexByOffset(unsigned int Offset)
     return -1;
 }
 
+unsigned int
+PELib::GetLastSectionRVA()
+{
+    int NumberOfSections = GetNumberOfSections();
+    auto SectionHeaderPtr = &mSectionHeaderPtr[NumberOfSections - 1];
+    return SectionHeaderPtr->virtual_address;
+}
+
+size_t
+PELib::GetLastSectionVA()
+{
+    return GetImageBase() + GetLastSectionRVA();
+}
+
 int
 PELib::AppendSection(const char *NewSectionName, size_t Size, unsigned int Characteristics)
 {
