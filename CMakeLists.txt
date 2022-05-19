@@ -75,8 +75,10 @@ set(CCPELib_SOURCES "")
 list(APPEND CCPELib_SOURCES
 	"src/CCPELib.Align.cpp"
 	"src/CCPELib.Image.cpp"
+	"src/CCPELib.Patch.cpp"
 	"src/CCPELib.Section.cpp"
 	"src/CCPELib.Static.cpp"
+	"src/CCPELib.Transform.cpp"
 	"src/CCPELib.cpp"
 	"include/CCPELib.h"
 )

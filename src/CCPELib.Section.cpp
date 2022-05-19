@@ -114,6 +114,74 @@ PELib::GetSectionMaxRVA()
 }
 
 int
+PELib::GetSectionIndexByRVA(unsigned int RVA)
+{
+    int NumberOfSections = GetNumberOfSections();
+
+    for (int i = 0; i < NumberOfSections; i++)
+    {
+        auto SectionHeaderPtr = &mSectionHeaderPtr[i];
+
+        if (RVA >= SectionHeaderPtr->virtual_address &&
+            RVA < SectionHeaderPtr->virtual_address + SectionHeaderPtr->virtual_size)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int
+PELib::GetSectionIndexByVA(size_t VA)
+{
+    return GetSectionIndexByRVA(VA - GetImageBase());
+}
+
+int
+PELib::GetSectionIndexByName(const char *SectionName)
+{
+    if (mSectionHeaderPtr == nullptr || SectionName == nullptr)
+    {
+        return -1;
+    }
+
+    int NumberOfSections = GetNumberOfSections();
+    char TempName[LEN_SHORT_STR + 2] = {0};
+
+    for (int i = 0; i < NumberOfSections; i++)
+    {
+        memset(TempName, 0, sizeof(TempName));
+        memcpy(TempName, mSectionHeaderPtr[i].name.short_name, LEN_SHORT_STR);
+        if (strncmp(TempName, SectionName, LEN_SHORT_STR) == 0)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int
+PELib::GetSectionIndexByOffset(unsigned int Offset)
+{
+    int NumberOfSections = GetNumberOfSections();
+
+    for (int i = 0; i < NumberOfSections; i++)
+    {
+        auto SectionHeaderPtr = &mSectionHeaderPtr[i];
+
+        if (Offset >= SectionHeaderPtr->ptr_raw_data &&
+            Offset < SectionHeaderPtr->ptr_raw_data + SectionHeaderPtr->size_raw_data)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int
 PELib::AppendSection(const char *NewSectionName, size_t Size, unsigned int Characteristics)
 {
     if (NewSectionName == nullptr || Size == 0 || mSectionHeaderPtr == nullptr)

@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 namespace win {
 struct dos_header_t;
@@ -42,24 +43,40 @@ public:
     unsigned char *GetFileBufferMemoryPtr();
     bool ReallocFileBufferMemory(unsigned int NewSize, unsigned int OldSize);
 
+public:
     // align
     unsigned int AlignValue(unsigned int Value, unsigned int AlignNumber);
     unsigned int FileAlignValue(unsigned int Value);
     unsigned int SectionAlignValue(unsigned int Value);
 
+public:
+    // transform
+    unsigned int RVA2Offset(unsigned int RVA);
+
+public:
     // section
     int GetNumberOfSections();
     bool SetNumberOfSections(int SectionCount);
     unsigned int GetSectionMaxOffset(); // align by file alignment
     unsigned int GetSectionMaxRVA();    // align by section alignment
+    int GetSectionIndexByRVA(unsigned int RVA);
+    int GetSectionIndexByVA(size_t VA);
+    int GetSectionIndexByName(const char *SectionName);
+    int GetSectionIndexByOffset(unsigned int Offset);
     int AppendSection(const char *NewSectionName, size_t Size, unsigned int Characteristics);
     int AppendSection(const char *NewSectionName, size_t RawSize, size_t VirtualSize, unsigned int Characteristics);
 
+public:
     // image
     size_t GetImageBase();
     size_t GetImageSize();
     bool SetImageBase(size_t ImageBase);
     bool SetImageSize(size_t ImageSize);
+
+public:
+    // patch
+    bool PatchAddressByVA(size_t VA, const std::vector<unsigned char> &PatchValueVector);
+    bool PatchAddressByRVA(size_t RVA, const std::vector<unsigned char> &PatchValueVector);
 
 private:
     // pe stub

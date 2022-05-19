@@ -165,6 +165,8 @@ PELib::ReallocFileBufferMemory(unsigned int NewSize, unsigned int OldSize)
         (win::section_header_t
              *)((unsigned char *)&mNtHeaderPtr64->optional_header + mNtHeaderPtr64->file_header.size_optional_header);
 #endif
+
+    return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////////
