@@ -274,7 +274,7 @@ PELib::AppendSection(const char *NewSectionName, size_t RawSize, size_t VirtualS
 
     // new section name
     unsigned char SectionName[LEN_SHORT_STR] = {0};
-    auto SectionNameLen = strlen(NewSectionName);
+    size_t SectionNameLen = strlen(NewSectionName);
     if (SectionNameLen > LEN_SHORT_STR)
     {
         memcpy(SectionName, NewSectionName, LEN_SHORT_STR);
