@@ -185,6 +185,11 @@ unsigned int
 PELib::GetLastSectionRVA()
 {
     int NumberOfSections = GetNumberOfSections();
+    if (NumberOfSections < 1)
+    {
+        return 0;
+    }
+
     auto SectionHeaderPtr = &mSectionHeaderPtr[NumberOfSections - 1];
     return SectionHeaderPtr->virtual_address;
 }
