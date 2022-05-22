@@ -122,6 +122,18 @@ PELib::GetOutputFileSize()
     return OutputFileSize;
 }
 
+size_t
+PELib::GetOldFileSize()
+{
+    return mOldFileSize;
+}
+
+size_t
+PELib::GetNewFileSize()
+{
+    return mNewFileSize;
+}
+
 unsigned char *
 PELib::GetFileBufferMemoryPtr()
 {
