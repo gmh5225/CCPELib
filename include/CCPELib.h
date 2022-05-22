@@ -40,6 +40,8 @@ public:
     bool Load(const char *FileName, bool IsClearDebugData = true);
     bool Save(const char *FileName);
     size_t GetOutputFileSize();
+    size_t GetOldFileSize();
+    size_t GetNewFileSize();
     unsigned char *GetFileBufferMemoryPtr();
     bool ReallocFileBufferMemory(unsigned int NewSize, unsigned int OldSize);
 
