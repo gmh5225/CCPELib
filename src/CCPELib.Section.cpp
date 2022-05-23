@@ -211,6 +211,21 @@ PELib::AppendSection(const char *NewSectionName, size_t Size, unsigned int Chara
     return AppendSection(NewSectionName, Size, Size, Characteristics);
 }
 
+bool
+PELib::AppendSection(
+    const char *NewSectionName,
+    std::vector<unsigned char> &AppendBuffer,
+    size_t Size,
+    unsigned int Characteristics)
+{
+    if (NewSectionName == nullptr || Size == 0 || mSectionHeaderPtr == nullptr)
+    {
+        return false;
+    }
+
+    return AppendSection(NewSectionName, AppendBuffer, Size, Size, Characteristics);
+}
+
 int
 PELib::AppendSection(const char *NewSectionName, size_t RawSize, size_t VirtualSize, unsigned int Characteristics)
 {
@@ -315,6 +330,24 @@ PELib::AppendSection(const char *NewSectionName, size_t RawSize, size_t VirtualS
     }
 
     return NumberOfSections;
+}
+
+bool
+PELib::AppendSection(
+    const char *NewSectionName,
+    std::vector<unsigned char> &AppendBuffer,
+    size_t RawSize,
+    size_t VirtualSize,
+    unsigned int Characteristics)
+{
+    int NumberOfSections = AppendSection(NewSectionName, RawSize, VirtualSize, Characteristics);
+    if (NumberOfSections > 0)
+    {
+        auto LastSectionVA = GetLastSectionVA();
+        return PatchAddressByVA(LastSectionVA, AppendBuffer);
+    }
+
+    return false;
 }
 
 } // namespace CCPELib

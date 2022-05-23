@@ -68,7 +68,18 @@ public:
     unsigned int GetLastSectionRVA();
     size_t GetLastSectionVA();
     int AppendSection(const char *NewSectionName, size_t Size, unsigned int Characteristics);
+    bool AppendSection(
+        const char *NewSectionName,
+        std::vector<unsigned char> &AppendBuffer,
+        size_t Size,
+        unsigned int Characteristics);
     int AppendSection(const char *NewSectionName, size_t RawSize, size_t VirtualSize, unsigned int Characteristics);
+    bool AppendSection(
+        const char *NewSectionName,
+        std::vector<unsigned char> &AppendBuffer,
+        size_t RawSize,
+        size_t VirtualSize,
+        unsigned int Characteristics);
 
 public:
     // image
