@@ -3,6 +3,7 @@
 name = "CCPELib"
 description = "Yet another PE file manipulation library."
 languages = ["CXX"]
+msvc-runtime = "static"
 include-before = [
 	"configurations.cmake"
 ]
