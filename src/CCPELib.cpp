@@ -156,8 +156,8 @@ PELib::ReallocFileBufferMemory(unsigned int NewSize, unsigned int OldSize)
 
     // copy old buffer
     memcpy(ReallocNewFileMemory, mFileBufferMemory, OldSize);
-    // zero new part
-    memset(ReallocNewFileMemory + OldSize, 0, NewSize - OldSize);
+    // set 'nop' to new part
+    memset(ReallocNewFileMemory + OldSize, 0x90, NewSize - OldSize);
 
     // realloc mFileBufferMemory
     delete[] mFileBufferMemory;
