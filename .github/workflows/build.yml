@@ -1,4 +1,4 @@
-name: CMake-64
+name: CMake-win
 
 on: [push, pull_request]
 
@@ -18,15 +18,29 @@ jobs:
       uses: actions/checkout@v3
       with:
           submodules: 'recursive'
-    - name: Build
+          
+    - name: Build32
       run: |
-        cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-        cmake --build build --config ${{ env.BUILD_TYPE }} --parallel
-        
-    - name: Upload artifacts
+        cmake -B build32 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -AWin32
+        cmake --build build32 --config ${{ env.BUILD_TYPE }} --parallel
+    
+    - name: Upload artifacts-32
+      uses: actions/upload-artifact@main
+      with:
+        name: CCPELib-32
+        path: |
+          include/*
+          build32/Release/*
+    
+    - name: Build64
+      run: |
+        cmake -B build64 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        cmake --build build64 --config ${{ env.BUILD_TYPE }} --parallel
+    
+    - name: Upload artifacts-64
       uses: actions/upload-artifact@main
       with:
         name: CCPELib-64
         path: |
           include/*
-          build/Release/*
+          build64/Release/*      
