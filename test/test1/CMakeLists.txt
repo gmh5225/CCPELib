@@ -6,30 +6,15 @@ if(CMKR_ROOT_PROJECT)
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
-# Target test1
-set(CMKR_TARGET test1)
-set(test1_SOURCES "")
-
-list(APPEND test1_SOURCES
+# Target: test1
+set(test1_SOURCES
 	test.cpp
-)
-
-list(APPEND test1_SOURCES
 	cmake.toml
 )
 
-set(CMKR_SOURCES ${test1_SOURCES})
 add_executable(test1)
 
-if(test1_SOURCES)
-	target_sources(test1 PRIVATE ${test1_SOURCES})
-endif()
-
-get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)
-if(NOT CMKR_VS_STARTUP_PROJECT)
-	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT test1)
-endif()
-
+target_sources(test1 PRIVATE ${test1_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${test1_SOURCES})
 
 target_compile_features(test1 PRIVATE
@@ -44,6 +29,8 @@ target_link_libraries(test1 PRIVATE
 	CCPELib
 )
 
-unset(CMKR_TARGET)
-unset(CMKR_SOURCES)
+get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)
+if(NOT CMKR_VS_STARTUP_PROJECT)
+	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT test1)
+endif()
 

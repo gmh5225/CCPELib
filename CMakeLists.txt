@@ -5,18 +5,17 @@ cmake_minimum_required(VERSION 3.15)
 
 # Enable support for MSVC_RUNTIME_LIBRARY
 cmake_policy(SET CMP0091 NEW)
-
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
 	message(FATAL_ERROR "In-tree builds are not supported. Run CMake from a separate directory: cmake -B build")
 endif()
 
-# Regenerate CMakeLists.txt automatically in the root project
 set(CMKR_ROOT_PROJECT OFF)
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 	set(CMKR_ROOT_PROJECT ON)
 
-	# Bootstrap cmkr
+	# Bootstrap cmkr and automatically regenerate CMakeLists.txt
 	include(cmkr.cmake OPTIONAL RESULT_VARIABLE CMKR_INCLUDE_RESULT)
 	if(CMKR_INCLUDE_RESULT)
 		cmkr()
@@ -24,10 +23,8 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 
 	# Enable folder support
 	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-endif()
 
-# Create a configure-time dependency on cmake.toml to improve IDE support
-if(CMKR_ROOT_PROJECT)
+	# Create a configure-time dependency on cmake.toml to improve IDE support
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
@@ -40,26 +37,20 @@ project(CCPELib
 		"Yet another PE file manipulation library."
 )
 
-# test
-set(CMKR_CMAKE_FOLDER ${CMAKE_FOLDER})
-if(CMAKE_FOLDER)
-	set(CMAKE_FOLDER "${CMAKE_FOLDER}/test")
-else()
-	set(CMAKE_FOLDER test)
+if(ENABLE_TEST) # test_mode
+	# Subdirectory: test
+	set(CMKR_CMAKE_FOLDER ${CMAKE_FOLDER})
+	if(CMAKE_FOLDER)
+		set(CMAKE_FOLDER "${CMAKE_FOLDER}/test")
+	else()
+		set(CMAKE_FOLDER test)
+	endif()
+	add_subdirectory(test)
+	set(CMAKE_FOLDER ${CMKR_CMAKE_FOLDER})
+
 endif()
-add_subdirectory(test)
-set(CMAKE_FOLDER ${CMKR_CMAKE_FOLDER})
-
-# Target linux-pe
-set(CMKR_TARGET linux-pe)
-set(linux-pe_SOURCES "")
-
-set(CMKR_SOURCES ${linux-pe_SOURCES})
+# Target: linux-pe
 add_library(linux-pe INTERFACE)
-
-if(linux-pe_SOURCES)
-	target_sources(linux-pe INTERFACE ${linux-pe_SOURCES})
-endif()
 
 target_compile_features(linux-pe INTERFACE
 	cxx_std_20
@@ -69,14 +60,8 @@ target_include_directories(linux-pe INTERFACE
 	"linux-pe/includes"
 )
 
-unset(CMKR_TARGET)
-unset(CMKR_SOURCES)
-
-# Target CCPELib
-set(CMKR_TARGET CCPELib)
-set(CCPELib_SOURCES "")
-
-list(APPEND CCPELib_SOURCES
+# Target: CCPELib
+set(CCPELib_SOURCES
 	"src/CCPELib.Align.cpp"
 	"src/CCPELib.Image.cpp"
 	"src/CCPELib.Patch.cpp"
@@ -85,19 +70,12 @@ list(APPEND CCPELib_SOURCES
 	"src/CCPELib.Transform.cpp"
 	"src/CCPELib.cpp"
 	"include/CCPELib.h"
-)
-
-list(APPEND CCPELib_SOURCES
 	cmake.toml
 )
 
-set(CMKR_SOURCES ${CCPELib_SOURCES})
 add_library(CCPELib)
 
-if(CCPELib_SOURCES)
-	target_sources(CCPELib PRIVATE ${CCPELib_SOURCES})
-endif()
-
+target_sources(CCPELib PRIVATE ${CCPELib_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${CCPELib_SOURCES})
 
 target_compile_features(CCPELib PUBLIC
@@ -111,7 +89,4 @@ target_include_directories(CCPELib PUBLIC
 target_link_libraries(CCPELib PUBLIC
 	linux-pe
 )
-
-unset(CMKR_TARGET)
-unset(CMKR_SOURCES)
 

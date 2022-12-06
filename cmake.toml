@@ -1,4 +1,8 @@
 # Reference: https://build-cpp.github.io/cmkr/cmake-toml
+
+[conditions]
+test_mode = "ENABLE_TEST"
+
 [project]
 name = "CCPELib"
 description = "Yet another PE file manipulation library."
@@ -9,6 +13,7 @@ include-before = [
 ]
 
 [subdir.test]
+condition = "test_mode"
 
 [target.linux-pe]
 type = "interface"
