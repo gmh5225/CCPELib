@@ -257,8 +257,8 @@ PELib::AppendSection(const char *NewSectionName, size_t RawSize, size_t VirtualS
     auto NumberOfSections = GetNumberOfSections();
 
     // get new section header offset
-    auto NewSectionHeaderOffset = unsigned int(
-        (size_t)mSectionHeaderPtr - (size_t)mFileBufferMemory + sizeof(win::section_header_t) * NumberOfSections);
+    auto NewSectionHeaderOffset =
+        (unsigned int)((size_t)mSectionHeaderPtr - (size_t)mFileBufferMemory + sizeof(win::section_header_t) * NumberOfSections);
 
     if (NewSectionHeaderOffset + sizeof(win::section_header_t) > SizeOfHeaders)
     {
