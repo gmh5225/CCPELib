@@ -1,2 +1,2 @@
 # CCPELib
-Yet another PE file manipulation library
+Yet another PE file manipulation library.
