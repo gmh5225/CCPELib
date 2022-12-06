@@ -22,3 +22,11 @@ jobs:
       run: |
         cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
         cmake --build build --config ${{ env.BUILD_TYPE }} --parallel
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@main
+      with:
+        name: CCPELib-64
+        path: |
+          include/*
+          build/Release/*
