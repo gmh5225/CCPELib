@@ -2,6 +2,7 @@
 
 [target.test1]
 type = "executable"
+msvc-runtime = "static"
 headers = ["**.h"]
 sources = ["**.cpp", "**.h"]
 include-directories = [
