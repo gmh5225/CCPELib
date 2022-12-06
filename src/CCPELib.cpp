@@ -1,14 +1,6 @@
 #include "CCPELib.h"
 #include <linuxpe>
 
-#if ((ULONG_MAX) == (UINT_MAX))
-#    define CCPELibIS32BIT
-#else
-#    define CCPELibIS64BIT
-#endif
-
-#define PE_HEADER_SIZE 0x1000
-
 namespace CCPELib {
 
 PELib::PELib() {}
@@ -28,8 +20,17 @@ PELib::Load(const char *FileName, bool IsClearDebugData /*= true*/)
     // mark ClearDebugData
     mIsClearDebugData = IsClearDebugData;
 
-    if (!(IsPEFile32(FileName) || IsPEFile64(FileName)))
+    if (IsPEFile64(FileName))
     {
+        mIsX64 = true;
+    }
+    else if (IsPEFile32(FileName))
+    {
+        mIsX64 = false;
+    }
+    else
+    {
+        // not support
         return false;
     }
 
@@ -63,15 +64,19 @@ PELib::Load(const char *FileName, bool IsClearDebugData /*= true*/)
     // save nt_headers
     mNtHeaderPtr32 = (win::nt_headers_x86_t *)(mFileBufferMemory + mDosHeaderPtr->e_lfanew);
     mNtHeaderPtr64 = (win::nt_headers_x64_t *)(mFileBufferMemory + mDosHeaderPtr->e_lfanew);
-#ifdef CCPELibIS32BIT
-    mSectionHeaderPtr =
-        (win::section_header_t
-             *)((unsigned char *)&mNtHeaderPtr32->optional_header + mNtHeaderPtr32->file_header.size_optional_header);
-#else
-    mSectionHeaderPtr =
-        (win::section_header_t
-             *)((unsigned char *)&mNtHeaderPtr64->optional_header + mNtHeaderPtr64->file_header.size_optional_header);
-#endif
+
+    if (mIsX64)
+    {
+        mSectionHeaderPtr =
+            (win::section_header_t
+                 *)((unsigned char *)&mNtHeaderPtr64->optional_header + mNtHeaderPtr64->file_header.size_optional_header);
+    }
+    else
+    {
+        mSectionHeaderPtr =
+            (win::section_header_t
+                 *)((unsigned char *)&mNtHeaderPtr32->optional_header + mNtHeaderPtr32->file_header.size_optional_header);
+    }
 
     // load pe struct
     if (!LoadPEStruct())
@@ -141,7 +146,7 @@ PELib::GetFileBufferMemoryPtr()
 }
 
 bool
-PELib::ReallocFileBufferMemory(unsigned int NewSize, unsigned int OldSize)
+PELib::ReallocFileBufferMemory(size_t NewSize, size_t OldSize)
 {
     if (NewSize == 0 || NewSize < OldSize)
     {
@@ -168,15 +173,19 @@ PELib::ReallocFileBufferMemory(unsigned int NewSize, unsigned int OldSize)
     // save nt_headers
     mNtHeaderPtr32 = (win::nt_headers_x86_t *)(mFileBufferMemory + mDosHeaderPtr->e_lfanew);
     mNtHeaderPtr64 = (win::nt_headers_x64_t *)(mFileBufferMemory + mDosHeaderPtr->e_lfanew);
-#ifdef CCPELibIS32BIT
-    mSectionHeaderPtr =
-        (win::section_header_t
-             *)((unsigned char *)&mNtHeaderPtr32->optional_header + mNtHeaderPtr32->file_header.size_optional_header);
-#else
-    mSectionHeaderPtr =
-        (win::section_header_t
-             *)((unsigned char *)&mNtHeaderPtr64->optional_header + mNtHeaderPtr64->file_header.size_optional_header);
-#endif
+
+    if (mIsX64)
+    {
+        mSectionHeaderPtr =
+            (win::section_header_t
+                 *)((unsigned char *)&mNtHeaderPtr64->optional_header + mNtHeaderPtr64->file_header.size_optional_header);
+    }
+    else
+    {
+        mSectionHeaderPtr =
+            (win::section_header_t
+                 *)((unsigned char *)&mNtHeaderPtr32->optional_header + mNtHeaderPtr32->file_header.size_optional_header);
+    }
 
     return true;
 }

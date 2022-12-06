@@ -1,24 +1,19 @@
 #include "CCPELib.h"
 #include <linuxpe>
 
-#if ((ULONG_MAX) == (UINT_MAX))
-#    define CCPELibIS32BIT
-#else
-#    define CCPELibIS64BIT
-#endif
-
-#define PE_HEADER_SIZE 0x1000
-
 namespace CCPELib {
 
 int
 PELib::GetNumberOfSections()
 {
-#ifdef CCPELibIS32BIT
-    return mNtHeaderPtr32->file_header.num_sections;
-#else
-    return mNtHeaderPtr64->file_header.num_sections;
-#endif
+    if (mIsX64)
+    {
+        return mNtHeaderPtr64->file_header.num_sections;
+    }
+    else
+    {
+        return mNtHeaderPtr32->file_header.num_sections;
+    }
 }
 
 bool
@@ -29,11 +24,15 @@ PELib::SetNumberOfSections(int SectionCount)
         return false;
     }
 
-#ifdef CCPELibIS32BIT
-    mNtHeaderPtr32->file_header.num_sections = SectionCount;
-#else
-    mNtHeaderPtr64->file_header.num_sections = SectionCount;
-#endif
+    if (mIsX64)
+    {
+        mNtHeaderPtr64->file_header.num_sections = SectionCount;
+    }
+    else
+    {
+        mNtHeaderPtr32->file_header.num_sections = SectionCount;
+    }
+
     return true;
 }
 
@@ -61,11 +60,16 @@ PELib::GetSectionMaxOffset()
     if (MaxOffset == 0)
     {
         // imposible actually
-#ifdef CCPELibIS32BIT
-        auto SizeOfHeaders = mNtHeaderPtr32->optional_header.size_headers;
-#else
-        auto SizeOfHeaders = mNtHeaderPtr64->optional_header.size_headers;
-#endif
+        unsigned int SizeOfHeaders = 0;
+        if (mIsX64)
+        {
+            SizeOfHeaders = mNtHeaderPtr64->optional_header.size_headers;
+        }
+        else
+        {
+            SizeOfHeaders = mNtHeaderPtr32->optional_header.size_headers;
+        }
+
         MaxOffset = SizeOfHeaders;
     }
 
@@ -99,11 +103,15 @@ PELib::GetSectionMaxRVA()
     if (MaxRVA == 0)
     {
         // imposible actually
-#ifdef CCPELibIS32BIT
-        auto SizeOfHeaders = mNtHeaderPtr32->optional_header.size_headers;
-#else
-        auto SizeOfHeaders = mNtHeaderPtr64->optional_header.size_headers;
-#endif
+        unsigned int SizeOfHeaders = 0;
+        if (mIsX64)
+        {
+            SizeOfHeaders = mNtHeaderPtr64->optional_header.size_headers;
+        }
+        else
+        {
+            SizeOfHeaders = mNtHeaderPtr32->optional_header.size_headers;
+        }
         MaxRVA = SizeOfHeaders;
     }
 
@@ -133,7 +141,7 @@ PELib::GetSectionIndexByRVA(unsigned int RVA)
 }
 
 int
-PELib::GetSectionIndexByVA(size_t VA)
+PELib::GetSectionIndexByVA(uint64_t VA)
 {
     return GetSectionIndexByRVA(VA - GetImageBase());
 }
@@ -194,7 +202,7 @@ PELib::GetLastSectionRVA()
     return SectionHeaderPtr->virtual_address;
 }
 
-size_t
+uint64_t
 PELib::GetLastSectionVA()
 {
     return GetImageBase() + GetLastSectionRVA();
@@ -236,11 +244,16 @@ PELib::AppendSection(const char *NewSectionName, size_t RawSize, size_t VirtualS
     }
 
     // SizeOfHeaders = 0x400
-#ifdef CCPELibIS32BIT
-    auto SizeOfHeaders = mNtHeaderPtr32->optional_header.size_headers;
-#else
-    auto SizeOfHeaders = mNtHeaderPtr64->optional_header.size_headers;
-#endif
+    uint32_t SizeOfHeaders = 0;
+    if (mIsX64)
+    {
+        SizeOfHeaders = mNtHeaderPtr64->optional_header.size_headers;
+    }
+    else
+    {
+        SizeOfHeaders = mNtHeaderPtr32->optional_header.size_headers;
+    }
+
     auto NumberOfSections = GetNumberOfSections();
 
     // get new section header offset

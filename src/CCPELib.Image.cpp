@@ -1,17 +1,9 @@
 #include "CCPELib.h"
 #include <linuxpe>
 
-#if ((ULONG_MAX) == (UINT_MAX))
-#    define CCPELibIS32BIT
-#else
-#    define CCPELibIS64BIT
-#endif
-
-#define PE_HEADER_SIZE 0x1000
-
 namespace CCPELib {
 
-size_t
+uint64_t
 PELib::GetImageBase()
 {
     if (mNtHeaderPtr32 == nullptr)
@@ -19,11 +11,20 @@ PELib::GetImageBase()
         return 0;
     }
 
-#ifdef CCPELibIS32BIT
-    return mNtHeaderPtr32->optional_header.image_base;
-#else
-    return mNtHeaderPtr64->optional_header.image_base;
-#endif
+    if (mNtHeaderPtr64 == nullptr)
+    {
+        return 0;
+    }
+
+    if (mIsX64)
+    {
+        return mNtHeaderPtr64->optional_header.image_base;
+    }
+    else
+    {
+        return mNtHeaderPtr32->optional_header.image_base;
+    }
+    return 0;
 }
 
 size_t
@@ -34,26 +35,43 @@ PELib::GetImageSize()
         return 0;
     }
 
-#ifdef CCPELibIS32BIT
-    return mNtHeaderPtr32->optional_header.size_image;
-#else
-    return mNtHeaderPtr64->optional_header.size_image;
-#endif
+    if (mNtHeaderPtr64 == nullptr)
+    {
+        return 0;
+    }
+
+    if (mIsX64)
+    {
+        return mNtHeaderPtr64->optional_header.size_image;
+    }
+    else
+    {
+        return mNtHeaderPtr32->optional_header.size_image;
+    }
+    return 0;
 }
 
 bool
-PELib::SetImageBase(size_t ImageBase)
+PELib::SetImageBase(uint64_t ImageBase)
 {
     if (mNtHeaderPtr32 == nullptr)
     {
         return false;
     }
 
-#ifdef CCPELibIS32BIT
-    mNtHeaderPtr32->optional_header.image_base = ImageBase;
-#else
-    mNtHeaderPtr64->optional_header.image_base = ImageBase;
-#endif
+    if (mNtHeaderPtr64 == nullptr)
+    {
+        return false;
+    }
+
+    if (mIsX64)
+    {
+        mNtHeaderPtr64->optional_header.image_base = ImageBase;
+    }
+    else
+    {
+        mNtHeaderPtr32->optional_header.image_base = ImageBase;
+    }
 
     return true;
 }
@@ -66,11 +84,19 @@ PELib::SetImageSize(size_t ImageSize)
         return false;
     }
 
-#ifdef CCPELibIS32BIT
-    mNtHeaderPtr32->optional_header.size_image = ImageSize;
-#else
-    mNtHeaderPtr64->optional_header.size_image = ImageSize;
-#endif
+    if (mNtHeaderPtr64 == nullptr)
+    {
+        return false;
+    }
+
+    if (mIsX64)
+    {
+        mNtHeaderPtr64->optional_header.size_image = ImageSize;
+    }
+    else
+    {
+        mNtHeaderPtr32->optional_header.size_image = ImageSize;
+    }
 
     return true;
 }

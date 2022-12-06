@@ -43,7 +43,7 @@ public:
     size_t GetOldFileSize();
     size_t GetNewFileSize();
     unsigned char *GetFileBufferMemoryPtr();
-    bool ReallocFileBufferMemory(unsigned int NewSize, unsigned int OldSize);
+    bool ReallocFileBufferMemory(size_t NewSize, size_t OldSize);
 
 public:
     // align
@@ -62,11 +62,11 @@ public:
     unsigned int GetSectionMaxOffset(); // align by file alignment
     unsigned int GetSectionMaxRVA();    // align by section alignment
     int GetSectionIndexByRVA(unsigned int RVA);
-    int GetSectionIndexByVA(size_t VA);
+    int GetSectionIndexByVA(uint64_t VA);
     int GetSectionIndexByName(const char *SectionName);
     int GetSectionIndexByOffset(unsigned int Offset);
     unsigned int GetLastSectionRVA();
-    size_t GetLastSectionVA();
+    uint64_t GetLastSectionVA();
     int AppendSection(const char *NewSectionName, size_t Size, unsigned int Characteristics);
     bool AppendSection(
         const char *NewSectionName,
@@ -83,14 +83,14 @@ public:
 
 public:
     // image
-    size_t GetImageBase();
+    uint64_t GetImageBase();
     size_t GetImageSize();
-    bool SetImageBase(size_t ImageBase);
+    bool SetImageBase(uint64_t ImageBase);
     bool SetImageSize(size_t ImageSize);
 
 public:
     // patch
-    bool PatchAddressByVA(size_t VA, const std::vector<unsigned char> &PatchValueVector);
+    bool PatchAddressByVA(uint64_t VA, const std::vector<unsigned char> &PatchValueVector);
     bool PatchAddressByRVA(size_t RVA, const std::vector<unsigned char> &PatchValueVector);
 
 private:
@@ -100,6 +100,7 @@ private:
 
 private:
     // misc
+    bool mIsX64 = false;
     bool mIsClearDebugData = true;
 
     // file name

@@ -1,14 +1,6 @@
 #include "CCPELib.h"
 #include <linuxpe>
 
-#if ((ULONG_MAX) == (UINT_MAX))
-#    define CCPELibIS32BIT
-#else
-#    define CCPELibIS64BIT
-#endif
-
-#define PE_HEADER_SIZE 0x1000
-
 namespace CCPELib {
 
 // align
@@ -41,11 +33,16 @@ PELib::FileAlignValue(unsigned int Value)
         return 0;
     }
 
-#ifdef CCPELibIS32BIT
-    auto FileAlignment = mNtHeaderPtr32->optional_header.file_alignment;
-#else
-    auto FileAlignment = mNtHeaderPtr64->optional_header.file_alignment;
-#endif
+    uint32_t FileAlignment = 0x200;
+    if (mIsX64)
+    {
+        FileAlignment = mNtHeaderPtr64->optional_header.file_alignment;
+    }
+    else
+    {
+        FileAlignment = mNtHeaderPtr32->optional_header.file_alignment;
+    }
+
     return AlignValue(Value, FileAlignment);
 }
 
@@ -62,11 +59,16 @@ PELib::SectionAlignValue(unsigned int Value)
         return 0;
     }
 
-#ifdef CCPELibIS32BIT
-    auto SectionAlignment = mNtHeaderPtr32->optional_header.section_alignment;
-#else
-    auto SectionAlignment = mNtHeaderPtr64->optional_header.section_alignment;
-#endif
+    uint32_t SectionAlignment = 0x1000;
+    if (mIsX64)
+    {
+        SectionAlignment = mNtHeaderPtr64->optional_header.section_alignment;
+    }
+    else
+    {
+        SectionAlignment = mNtHeaderPtr32->optional_header.section_alignment;
+    }
+
     return AlignValue(Value, SectionAlignment);
 }
 
