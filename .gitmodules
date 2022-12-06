@@ -1,3 +1,6 @@
 [submodule "linux-pe"]
 	path = linux-pe
 	url = https://github.com/gmh5225/linux-pe
+[submodule "test/googletest"]
+	path = test/googletest
+	url = https://github.com/google/googletest

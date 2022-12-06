@@ -6,6 +6,16 @@ if(CMKR_ROOT_PROJECT)
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
+# Subdirectory: googletest
+set(CMKR_CMAKE_FOLDER ${CMAKE_FOLDER})
+if(CMAKE_FOLDER)
+	set(CMAKE_FOLDER "${CMAKE_FOLDER}/googletest")
+else()
+	set(CMAKE_FOLDER googletest)
+endif()
+add_subdirectory(googletest)
+set(CMAKE_FOLDER ${CMKR_CMAKE_FOLDER})
+
 # Subdirectory: test1
 set(CMKR_CMAKE_FOLDER ${CMAKE_FOLDER})
 if(CMAKE_FOLDER)

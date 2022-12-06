@@ -4,6 +4,13 @@
 type = "executable"
 headers = ["**.h"]
 sources = ["**.cpp", "**.h"]
-include-directories = ["../../include"]
-link-libraries = ["CCPELib"]
+include-directories = [
+"../../include",
+"../googletest/googletest/include"
+]
+
+link-libraries = [
+"CCPELib",
+"gtest"
+]
 compile-features = ["cxx_std_20"]

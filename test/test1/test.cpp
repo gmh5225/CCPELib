@@ -1,10 +1,10 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "CCPELib.h"
+#include <CCPELib.h>
+#include <gtest/gtest.h>
 
-void
-test_add_section()
+TEST(test1, test_add_section)
 {
     CCPELib::PELib pelib;
 
@@ -12,14 +12,14 @@ test_add_section()
     pelib.AppendSection(".hehe", 0x1000, 0);
     std::vector<unsigned char> PatchValue = {0x90, 0x90};
     auto LastSectionVA = pelib.GetLastSectionVA();
-    printf("GetLastSectionVA=%p\n", LastSectionVA);
+    printf("New section VA=%p\n", LastSectionVA);
     pelib.PatchAddressByVA(LastSectionVA, PatchValue);
     pelib.Save(CCPELIB_SRC_DIR "/sample/testexe.out.exe");
 }
 
 int
-main()
+main(int argc, char *argv[])
 {
-    test_add_section();
-    return 0;
+    testing::InitGoogleTest(&argc, const_cast<char **>(argv));
+    return RUN_ALL_TESTS();
 }

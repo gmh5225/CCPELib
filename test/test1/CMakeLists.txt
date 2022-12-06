@@ -23,10 +23,12 @@ target_compile_features(test1 PRIVATE
 
 target_include_directories(test1 PRIVATE
 	"../../include"
+	"../googletest/googletest/include"
 )
 
 target_link_libraries(test1 PRIVATE
 	CCPELib
+	gtest
 )
 
 get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)
