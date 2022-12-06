@@ -38,6 +38,10 @@ project(CCPELib
 )
 
 if(ENABLE_TEST) # test_mode
+	add_definitions(-DENABLE_TEST)
+endif()
+
+if(ENABLE_TEST) # test_mode
 	# Subdirectory: test
 	set(CMKR_CMAKE_FOLDER ${CMAKE_FOLDER})
 	if(CMAKE_FOLDER)
